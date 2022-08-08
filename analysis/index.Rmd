@@ -8,4 +8,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+Welcome to my supplemental material website for the research submitted to the _European Journal of Personality_ as part of a special issue on ``Measurement Processes and Interpretation.''
+
+
