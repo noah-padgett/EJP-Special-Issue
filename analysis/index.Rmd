@@ -10,4 +10,47 @@ editor_options:
 
 Welcome to my supplemental material website for the research submitted to the _European Journal of Personality_ as part of a special issue on ``Measurement Processes and Interpretation.''
 
+## Summary of research
+
+A psychometric modeling approach for personality assessments is described that
+incorporates domain knowledge, process data (e.g., response time), and measurement error.
+Measurement error is directly modeled as a misclassification error in the model of a
+personality construct. The new modeling approach for personality assessments will be
+shown to improve reliability estimates and provide a robust account of the uncertainty in
+the observed response.
+
+## Contribution to personality research
+
+In this work, measurement error modeled as misclassified responses is shown to provide a flexible approach for evaluating the sensitivity of reliability evidence to different schemes of incorporating response time as information in the model evaluation process.
+However, these methods are not limited to evaluating reliability estimates. 
+The benefits of decomposing measurement error using a flexible framework is demonstrated which can aid the evaluation of the impact of measurement error on the validity of inferences. 
+The proposed measurement model for personality assessments is a unique approach for modeling and accounting for potentially invalid participant responses and increasing confidence in research finding using personality measures.
+
+## Connection to special issue in EJP
+
+The proposed modeling approach for personality scales enhances factor-analytic and item response theory traditions with a focus on the underlying psychological response processes individuals use to respond to items. 
+A major benefit of the proposed methods is giving flexibility to researchers to model response uncertainty in a response process driven approach. 
+This work emphasizes a novel perspective on measurement properties such as error or invariance. 
+This work questions the foundation of psychological measurement models and how response uncertainty can be effectively modeled. Effectively modeling the response process was emphasizes to include all available information from the testing environment that can be easily collected by researchers (namely, response time). 
+Utilizing the methods in this work will result in more reliably measuring the underlying construct of interest which leads to inferences with more validity evidence for researchers to rely upon.
+
+## Focal results presented
+
+* [Comparison of omega posteriors](model_comparison.html)
+
+* [Prior-to-posterior sensitivity analysis](sensitivity_analysis.html)
+
+* [Summary of data used](data_summary.html)
+
+## Full model results
+
+* [Results traditional item factor analysis](model1_results.html)
+
+* [Results of joint model item factor and response time model](model2_results.html)
+
+* [Results of misclassification model with response time jointly modeled](model4_results.html)
+
+## Additional Results
+
+* [Results of misclassification model with response time directly informing misclassification (additional result not in paper)](model3_results.html)
 

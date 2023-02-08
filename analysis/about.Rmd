@@ -7,4 +7,10 @@ editor_options:
   chunk_output_type: console
 ---
 
-Describe your project.
+Measurement is a fundamental component of psychological research, and in this study, I discuss a novel modeling method for the measurement of personality constructs.
+The novel approach utilizes stimulus response time as information on the degree of measurement error observed in a response.
+The approach joins psychometric modeling tools with psychological domain knowledge to evaluate how sensitive inferences may be to sources of measurement error.
+In this study, measurement error in discrete responses is directly modeled as a "misclassification error." Using an open source dataset on extroversion, I demonstrate the novel modeling method and discuss how inferences may depend on how domain knowledge is utilized to build the measurement model.
+A key measure of the quality of measurement of latent traits is scale reliability. 
+Estimates of reliability will be shown to increase when additional sources of error are accounted for in the modeling process. 
+Implications for constructing scales, finding validity evidence for interpretations, and finding reliability evidence will be discussed.

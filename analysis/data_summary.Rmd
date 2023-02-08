@@ -1,0 +1,83 @@
+---
+title: "Extroversion Data Analysis"
+subtitle: "Data summary"
+author: "R. Noah Padgett"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r set-up, message=FALSE, error=FALSE, warning=FALSE}
+
+# Load packages & utility functions
+source("code/load_packages.R")
+source("code/load_utility_functions.R")
+# environment options
+options(scipen = 999, digits=3)
+
+```
+
+# Describing the Observed Data
+
+```{r}
+
+# Load diffIRT package with data
+library(diffIRT)
+data("extraversion")
+mydata <- na.omit(extraversion)
+
+# separate data then recombine
+d1 <- mydata %>%
+  as.data.frame() %>%
+  select(contains("X"))%>%
+  mutate(id = 1:n()) %>%
+  pivot_longer(
+    cols=contains("X"),
+    names_to = c("item"),
+    values_to = "Response"
+  ) %>%
+  mutate(
+    item = ifelse(nchar(item)==4,substr(item, 3,3),substr(item, 3,4))
+  )
+d2 <- mydata %>%
+  as.data.frame() %>%
+  select(contains("T"))%>%
+  mutate(id = 1:n()) %>%
+  pivot_longer(
+    cols=starts_with("T"),
+    names_to = c("item"),
+    values_to = "Time"
+  ) %>%
+  mutate(
+    item = ifelse(nchar(item)==4,substr(item, 3,3),substr(item, 3,4))
+  )
+dat <- left_join(d1, d2)
+
+dat_sum <- dat %>%
+  select(item, Response, Time) %>%
+  group_by(item) %>%
+  summarize(
+    M1 = mean(Response, na.rm=T),
+    Mt = mean(Time, na.rm=T),
+    SDt = sd(Time, na.rm=T),
+    Mlogt = mean(log(Time), na.rm=T),
+  )
+
+colnames(dat_sum) <-
+  c(
+    "Item",
+    "Proportion Endorsed",
+    "Mean Response Time",
+    "SD Response Time",
+    "Mean Log Response Time"
+  )
+
+kable(dat_sum, format = "html", digits = 3) %>%
+  kable_styling(full_width = T)
+
+# covariance among items
+kable(cov(mydata[,colnames(mydata) %like% "X"]), digits = 3) %>%
+  kable_styling(full_width = T)
+# correlation matrix
+psych::polychoric(mydata[,colnames(mydata) %like% "X"])
+
+```

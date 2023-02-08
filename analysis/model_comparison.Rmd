@@ -1,0 +1,290 @@
+---
+title: "Comparison of Reliability Posterior Distribution"
+author: "R. Noah Padgett"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r set-up, message=FALSE, error=FALSE, warning=FALSE}
+
+# Load packages & utility functions
+source("code/load_packages.R")
+source("code/load_utility_functions.R")
+# environment options
+options(scipen = 999, digits=3)
+
+```
+
+# Model Comparison
+
+## Comparing Reliability
+
+```{r reli-post}
+
+# true reliability value in population
+getOmega <- function(lambda, N_items){
+  theta = 1-lambda**2
+  (lambda*N_items)**2/((lambda*N_items)**2 + N_items*theta)
+}
+
+# simulated induced prior on omega
+prior_lambda <- function(){
+  y <- -1
+  while(y < 0){
+    lvar <- runif(1, 0.1, 5)
+    y <- rnorm(1, 0, 1/lvar)
+  }
+  return(y)
+}
+
+prior_omega <- function(lambda, theta){
+  (sum(lambda)**2)/(sum(lambda)**2 + sum(theta))
+}
+nsim=1000
+sim_omega <- numeric(nsim)
+for(i in 1:nsim){
+  lam_vec <- c(
+    prior_lambda(), prior_lambda(), prior_lambda(),prior_lambda(), prior_lambda()
+  )
+  tht_vec <- rep(1, 5)
+  sim_omega[i] <- prior_omega(lam_vec, tht_vec)
+}
+prior_data <- data.frame(omega=sim_omega)
+ggplot(prior_data, aes(x=omega))+
+  geom_density(adjust=2)+
+  labs(title="Induced prior on omega")+
+  theme_classic()
+
+# read in data
+o1 <- readr::read_csv(paste0(getwd(),"/data/extracted_omega_m1.csv"))
+o2 <- readr::read_csv(paste0(getwd(),"/data/extracted_omega_m2.csv"))
+o3 <- readr::read_csv(paste0(getwd(),"/data/extracted_omega_m3.csv"))
+o4 <- readr::read_csv(paste0(getwd(),"/data/extracted_omega_m4.csv"))
+dat_omega <- cbind(o1[,2], o2[,2], o3[,2], o4[,2])
+
+plot.dat <- dat_omega %>%
+  pivot_longer(
+    cols=everything(),
+    names_to = "model",
+    values_to = "est"
+  ) %>%
+  mutate(
+    model = factor(model, levels=paste0('model_',1:4), labels=paste0('Model ',1:4))
+  )
+
+sum.dat <- plot.dat %>%
+  group_by(model) %>%
+  summarise(
+    Mean = mean(est),
+    SD = sd(est),
+    Q025 = quantile(est, 0.025),
+    Q1 = quantile(est, 0.25),
+    Median = median(est),
+    Q3 = quantile(est, 0.75),
+    Q975 = quantile(est, 0.975),
+  )
+
+sum.dat %>%
+  filter(model != "Model 3") %>%
+kable(format = "html", digits=3) %>%
+  kable_styling(full_width = T)
+
+plot.dat %>%
+filter(model != "Model 3") %>%
+ggplot(aes(x=est, y=model, group=model))+
+ggdist::stat_halfeye(
+    adjust=2, justification=0,.width=0, point_colour=NA,
+    normalize="all", fill="grey75"
+  ) +
+  geom_boxplot(
+    width=.15, outlier.color = NA, alpha=0.5
+  ) +
+  labs(x="Reliability Estimates",
+       y="Estimating Model")+
+  #lims(x=c(0.80, 1))+
+  theme_classic()
+
+```
+
+
+## Test of Model Impact on Reliability Estimates
+
+### ANOVA
+
+```{r study1-anova}
+
+anova_assumptions_check(
+  dat = plot.dat, outcome = 'est',
+  factors = c('model'),
+  model = as.formula('est ~ model'))
+fit <- aov(est ~ model, data=plot.dat)
+summary(fit)
+
+# tukey
+TukeyHSD(fit)
+
+# ets^2
+summary(lm(est ~ model, data=plot.dat))
+
+```
+
+### Comparison posteriors using probabilities
+
+Next, instead of treating the posterior
+
+```{r}
+
+ggplot(plot.dat, aes(est, group=model, color=model, linetype=model)) +
+  stat_ecdf(
+    geom = "step",
+    pad=T
+  ) +
+  labs(x="Reliability (omega)",
+       y="Empirical Cumulative Distribution")+
+  scale_color_viridis_d()+
+  theme_classic()
+
+```
+
+# Maximal Reliability
+
+```{r}
+
+# read in data
+m1 <- readr::read_csv(paste0(getwd(),"/data/extracted_maximal_m1.csv"))
+m2 <- readr::read_csv(paste0(getwd(),"/data/extracted_maximal_m2.csv"))
+m3 <- readr::read_csv(paste0(getwd(),"/data/extracted_maximal_m3.csv"))
+m4 <- readr::read_csv(paste0(getwd(),"/data/extracted_maximal_m4.csv"))
+dat_max <- cbind(m1[,2], m2[,2], m3[,2], m4[,2])
+
+plot.dat2 <- dat_max %>%
+  pivot_longer(
+    cols=everything(),
+    names_to = "model",
+    values_to = "est"
+  ) %>%
+  mutate(
+    model = factor(model, levels=paste0('model_',1:4), labels=paste0('Model ',1:4))
+  )
+
+plot.dat2 %>%
+  group_by(model) %>%
+  summarise(
+    Mean = mean(est),
+    SD = sd(est),
+    Q025 = quantile(est, 0.025),
+    Q1 = quantile(est, 0.25),
+    Median = median(est),
+    Q3 = quantile(est, 0.75),
+    Q975 = quantile(est, 0.975),
+  ) %>%
+  kable(format = "html", digits=3) %>%
+  kable_styling(full_width = T)
+
+ggplot(plot.dat2,aes(x=est, y=model, group=model))+
+ggdist::stat_halfeye(
+    adjust=2, justification=0,.width=0, point_colour=NA,
+    normalize="all", fill="grey75"
+  ) +
+  geom_boxplot(
+    width=.15, outlier.color = NA, alpha=0.5
+  ) +
+  labs(x="Reliability Estimates (maximal reliability)",
+       y="Estimating Model")+
+  #lims(x=c(0.80, 1))+
+  theme_classic()
+
+```
+
+# Specific probabilities
+
+```{r}
+
+
+plot.dat %>%
+  group_by(model)%>%
+  summarise(
+    pr_gre_70 = sum(est >= 0.7)/n(),
+    pr_gre_80 = sum(est >= 0.8)/n(),
+    pr_gre_90 = sum(est >= 0.9)/n()
+  )
+
+```
+
+# Manuscript Tables and Figures
+
+## Tables
+
+```{r latex-tables}
+
+print(
+  xtable(
+    sum.dat,
+    , caption = c("Summary of posterior distribution of reliability")
+    ,align = "llrrrrrrr"
+  ),
+  include.rownames=F,
+  booktabs=T
+)
+
+```
+
+
+## Figures
+
+```{r man-figures}
+
+
+
+
+p <- plot.dat %>%
+  mutate(
+    model = factor(model, levels=paste0("Model ",1:4), labels=c("IFA","IFA with RT","Misclassification IFA", "Misclassification\n IFA with RT"), ordered=T)
+  ) %>%
+  filter(model != "Misclassification IFA") %>%
+  ggplot(aes(x=est, y=model, group=model))+
+ggdist::stat_halfeye(
+    adjust=2, justification=0,.width=0, point_colour=NA,
+    normalize="all", fill="grey75"
+  ) +
+  geom_boxplot(
+    width=.15, outlier.color = NA, alpha=0.5
+  ) +
+  geom_vline(xintercept = 0.7, linetype="dashed")+
+  geom_vline(xintercept = 0.9, linetype="solid")+
+  labs(x="Reliability Estimates (coefficient omega)",
+       y=NULL)+
+  lims(x=c(0.6, 1)) +
+  theme_classic() +
+  theme(panel.grid = element_blank())
+p
+
+ggsave(filename = "fig/posterior_omega.pdf",plot=p,width = 7, height=4,units="in")
+ggsave(filename = "fig/posterior_omega.png",plot=p,width = 7, height=4,units="in")
+ggsave(filename = "fig/posterior_omega.eps",plot=p,width = 7, height=4,units="in")
+
+
+p <- plot.dat %>%
+  mutate(
+    model = factor(model, levels=paste0("Model ",1:4), labels=c("IFA","IFA with RT","Misclassification IFA", "Misclassification IFA with RT "), ordered=T)
+  ) %>%
+  filter(model != "Misclassification IFA") %>%
+  ggplot(aes(est, group=model, color=model, linetype=model)) +
+  stat_ecdf(
+    geom = "step",
+    pad=T, size=1
+  ) +
+  lims(x=c(0.6, 1)) +
+  labs(x="Reliability (coefficient omega)",
+       y="Empirical Cumulative Distribution")+
+  scale_color_viridis_d()+
+  theme_classic() +
+  theme(legend.position = c(0.25, 0.75),
+        legend.title = element_blank())
+p
+
+ggsave(filename = "fig/posterior_omega_ecd.pdf",plot=p,width = 5, height=3.5,units="in")
+ggsave(filename = "fig/posterior_omega_ecd.png",plot=p,width = 5, height=3.5,units="in")
+ggsave(filename = "fig/posterior_omega_ecd.eps",plot=p,width = 5, height=3.5,units="in")
+
+```

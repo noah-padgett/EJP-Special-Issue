@@ -284,7 +284,7 @@ $(document).ready(function () {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -295,8 +295,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -305,13 +305,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-08-08
+<strong>Last updated:</strong> 2023-02-08
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>EJP-Special-Issue/</code> <span
@@ -334,31 +334,36 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong925dd5f">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomnoahpadgettEJPSpecialIssuetreee8c2051b42aedab9919eae7615d591a58445f9detargetblanke8c2051a">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 925dd5f
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/noah-padgett/EJP-Special-Issue/tree/e8c2051b42aedab9919eae7615d591a58445f9de" target="_blank">e8c2051</a>
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong925dd5f"
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomnoahpadgettEJPSpecialIssuetreee8c2051b42aedab9919eae7615d591a58445f9detargetblanke8c2051a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -367,7 +372,8 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 925dd5f.
+The results in this page were generated with repository version
+<a href="https://github.com/noah-padgett/EJP-Special-Issue/tree/e8c2051b42aedab9919eae7615d591a58445f9de" target="_blank">e8c2051</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -382,9 +388,38 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/model1_results_cache/
+    Ignored:    analysis/model2_results_cache/
+    Ignored:    analysis/model3_results_cache/
+
+Untracked files:
+    Untracked:  analysis/data_summary.Rmd
+    Untracked:  analysis/extroversion.Rmd
+    Untracked:  analysis/model1_results.Rmd
+    Untracked:  analysis/model2_results.Rmd
+    Untracked:  analysis/model3_results.Rmd
+    Untracked:  analysis/model4_results.Rmd
+    Untracked:  analysis/model_comparison.Rmd
+    Untracked:  analysis/sensitivity_analysis.Rmd
+    Untracked:  code/JAGS/
+    Untracked:  code/load_packages.R
+    Untracked:  code/load_utility_functions.R
+    Untracked:  data/extracted_maximal_m1.csv
+    Untracked:  data/extracted_maximal_m2.csv
+    Untracked:  data/extracted_omega_m1.csv
+    Untracked:  data/extracted_omega_m2.csv
+    Untracked:  data/extracted_omega_m3.csv
+    Untracked:  data/extracted_omega_m4.csv
+    Untracked:  data/posterior_draws_m1.csv
+    Untracked:  data/posterior_draws_m2.csv
+    Untracked:  data/posterior_draws_m3.csv
+    Untracked:  data/posterior_draws_m4.csv
+    Untracked:  fig/
 
 Unstaged changes:
+    Modified:   analysis/about.Rmd
     Modified:   analysis/index.Rmd
 
 </code></pre>
@@ -432,10 +467,27 @@ Message
 <tbody>
 <tr>
 <td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/noah-padgett/EJP-Special-Issue/e8c2051b42aedab9919eae7615d591a58445f9de/docs/about.html" target="_blank">e8c2051</a>
+</td>
+<td>
+noah-padgett
+</td>
+<td>
+2022-08-08
+</td>
+<td>
+Initial Commit
+</td>
+</tr>
+<tr>
+<td>
 Rmd
 </td>
 <td>
-925dd5f
+<a href="https://github.com/noah-padgett/EJP-Special-Issue/blob/925dd5fdaf8302972d76179e56a0f9892cc76085/analysis/about.Rmd" target="_blank">925dd5f</a>
 </td>
 <td>
 noah-padgett
@@ -454,7 +506,22 @@ Start workflowr project.
 </div>
 </div>
 </div>
-<p>Describe your project.</p>
+<p>Measurement is a fundamental component of psychological research, and
+in this study, I discuss a novel modeling method for the measurement of
+personality constructs. The novel approach utilizes stimulus response
+time as information on the degree of measurement error observed in a
+response. The approach joins psychometric modeling tools with
+psychological domain knowledge to evaluate how sensitive inferences may
+be to sources of measurement error. In this study, measurement error in
+discrete responses is directly modeled as a “misclassification error.”
+Using an open source dataset on extroversion, I demonstrate the novel
+modeling method and discuss how inferences may depend on how domain
+knowledge is utilized to build the measurement model. A key measure of
+the quality of measurement of latent traits is scale reliability.
+Estimates of reliability will be shown to increase when additional
+sources of error are accounted for in the modeling process. Implications
+for constructing scales, finding validity evidence for interpretations,
+and finding reliability evidence will be discussed.</p>
 
 
 <!-- Adjust MathJax settings so that all math formulae are shown using

@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="R. Noah Padgett" />
+
+<meta name="date" content="2023-02-02" />
+
+<title>Extroversion Data Analysis</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">EJP-Special-Issue</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Extroversion Data Analysis</h1>
+<h3 class="subtitle">Model 2 Results</h3>
+<h4 class="author">R. Noah Padgett</h4>
+<h4 class="date">2023-02-02</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2023-02-02
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>EJP-Special-Issue/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220808code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20220808)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220808code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220808)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomnoahpadgettEJPSpecialIssuetreee8c2051b42aedab9919eae7615d591a58445f9detargetblanke8c2051a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/noah-padgett/EJP-Special-Issue/tree/e8c2051b42aedab9919eae7615d591a58445f9de" target="_blank">e8c2051</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomnoahpadgettEJPSpecialIssuetreee8c2051b42aedab9919eae7615d591a58445f9detargetblanke8c2051a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/noah-padgett/EJP-Special-Issue/tree/e8c2051b42aedab9919eae7615d591a58445f9de" target="_blank">e8c2051</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/model1_results_cache/
+
+Untracked files:
+    Untracked:  analysis/data_summary.Rmd
+    Untracked:  analysis/extroversion.Rmd
+    Untracked:  analysis/model1_results.Rmd
+    Untracked:  analysis/model2_results.Rmd
+    Untracked:  analysis/model3_results.Rmd
+    Untracked:  analysis/model4_results.Rmd
+    Untracked:  analysis/model_comparison.Rmd
+    Untracked:  analysis/sensitivity_analysis.Rmd
+    Untracked:  code/JAGS/
+    Untracked:  code/load_packages.R
+    Untracked:  code/load_utility_functions.R
+    Untracked:  data/extracted_maximal_m1.csv
+    Untracked:  data/extracted_omega_m1.csv
+    Untracked:  data/extracted_omega_m2.csv
+    Untracked:  data/extracted_omega_m3.csv
+    Untracked:  data/extracted_omega_m4.csv
+    Untracked:  data/posterior_draws_m1.csv
+    Untracked:  data/posterior_draws_m2.csv
+    Untracked:  data/posterior_draws_m3.csv
+    Untracked:  data/posterior_draws_m4.csv
+    Untracked:  fig/
+
+Unstaged changes:
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code># Load packages &amp; utility functions
+source(&quot;code/load_packages.R&quot;)
+source(&quot;code/load_utility_functions.R&quot;)
+# environment options
+options(scipen = 999, digits=3)</code></pre>
+<pre class="r"><code># Load diffIRT package with data
+library(diffIRT)
+data(&quot;extraversion&quot;)
+mydata &lt;- na.omit(extraversion)</code></pre>
+<div id="model-2-ifa-with-rt" class="section level1">
+<h1>Model 2: IFA with RT</h1>
+<div id="model-details" class="section level2">
+<h2>Model details</h2>
+<pre class="r"><code>cat(read_file(paste0(w.d, &quot;/code/JAGS/model_2.txt&quot;)))</code></pre>
+<pre><code>model {
+### Model
+  for(p in 1:N){
+    for(i in 1:nit){
+      # data model
+      y[p,i] ~ dbern(pi[p,i,2])
+
+      # LRV
+      ystar[p,i] ~ dnorm(lambda[i]*eta[p], 1)
+
+      # Pr(nu = 2)
+      pi[p,i,2] = phi(ystar[p,i] - tau[i,1])
+      # Pr(nu = 1)
+      pi[p,i,1] = 1 - phi(ystar[p,i] - tau[i,1])
+
+      # log-RT model
+      dev[p,i]&lt;-lambda[i]*(eta[p] - tau[i,1])
+      mu.lrt[p,i] &lt;- icept[i] - speed[p] - rho * abs(dev[p,i])
+      lrt[p,i] ~ dnorm(mu.lrt[p,i], prec[i])
+
+    }
+  }
+  ### Priors
+  # person parameters
+  for(p in 1:N){
+    eta[p] ~ dnorm(0, 1) # latent ability
+    speed[p]~dnorm(sigma.ts*eta[p],prec.s)  # latent speed
+  }
+  sigma.ts ~ dnorm(0, 0.1)
+  prec.s ~ dgamma(.1,.1)
+  # transformations
+  sigma.t = pow(prec.s, -1) + pow(sigma.ts, 2) # speed variance
+  cor.ts = sigma.ts/(pow(sigma.t,0.5)) # LV correlation
+
+  for(i in 1:nit){
+    # lrt parameters
+    icept[i]~dnorm(0,.1)
+    prec[i]~dgamma(.1,.1)
+    # Thresholds
+    tau[i, 1] ~ dnorm(0.0,0.1)
+    # loadings
+    lambda[i] ~ dnorm(0, lambdatau)T(0,)
+    # LRV total variance
+    # total variance = residual variance + fact. Var.
+    theta[i] = 1 + pow(lambda[i],2)
+    # standardized loading
+    lambda.std[i] = lambda[i]/pow(theta[i],0.5)
+  }
+  rho~dnorm(0,.1)I(0,)
+  lambdatau ~ dunif(5, 10)
+
+  # compute reliability estimates
+  lambda_sum[1] = lambda[1]
+  maximal_sum[1] = pow(lambda[1],2)
+  for(i in 2:nit){
+    #lambda_sum (sum factor loadings)
+    lambda_sum[i] = lambda_sum[i-1]+lambda[i]
+    maximal_sum[i] = maximal_sum[i-1] + pow(lambda[i],2)
+  }
+  reli.omega = (pow(lambda_sum[nit],2))/(pow(lambda_sum[nit],2)+nit)
+  reli.maximal = maximal_sum[nit]/(1+maximal_sum[nit])
+}</code></pre>
+</div>
+<div id="model-results" class="section level2">
+<h2>Model results</h2>
+<p>This model is similar to the BL-IRT model for jointly modeling item
+responses and response times (Molenaar et al., 2015).</p>
+<pre class="r"><code># Save parameters
+jags.params &lt;- c(&quot;tau&quot;,
+                 &quot;lambda&quot;,&quot;lambda.std&quot;,
+                 &quot;theta&quot;,
+                 &quot;icept&quot;,
+                 &quot;prec&quot;,
+                 &quot;prec.s&quot;,
+                 &quot;sigma.ts&quot;,
+                 &quot;rho&quot;,
+                 &quot;reli.omega&quot;, &quot;reli.maximal&quot;)
+# initial-values
+jags.inits &lt;- function(){
+    list(
+      &quot;tau&quot;=matrix(c(-0.64, -0.09, -1.05, -1.42, -0.11, -1.29, -1.59, -1.81, -0.93, -1.11), ncol=1, nrow=10),
+      &quot;lambda&quot;=rep(0.7,10),
+      &quot;eta&quot;=rnorm(142),
+      &quot;speed&quot;=rnorm(142),
+      &quot;ystar&quot;=matrix(c(0.7*rep(rnorm(142),10)), ncol=10),
+      &quot;rho&quot;=0.1,
+      &quot;icept&quot;=rep(0, 10),
+      &quot;prec.s&quot;=10,
+      &quot;prec&quot;=rep(4, 10),
+      &quot;sigma.ts&quot;=0.1
+    )
+  }
+
+jags.data &lt;- list(
+  y = mydata[,1:10],
+  lrt = mydata[,11:20],
+  N = nrow(mydata),
+  nit = 10
+)
+
+# Run model
+# Model 2
+
+model.fit &lt;-  R2jags::jags(
+  model = paste0(w.d, &quot;/code/JAGS/model_2.txt&quot;),
+  parameters.to.save = jags.params,
+  inits = jags.inits,
+  data = jags.data,
+  n.chains = 4,
+  n.burnin = 5000,
+  n.iter = 10000
+)</code></pre>
+<pre><code>module glm loaded</code></pre>
+<pre><code>Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 2840
+   Unobserved stochastic nodes: 1748
+   Total graph size: 19008
+
+Initializing model</code></pre>
+<pre class="r"><code>print(model.fit, width=1000)</code></pre>
+<pre><code>Inference for Bugs model at &quot;C:/Users/noahp/Documents/GitHub/EJP-Special-Issue/code/JAGS/model_2.txt&quot;, fit using jags,
+ 4 chains, each with 10000 iterations (first 5000 discarded), n.thin = 5
+ n.sims = 4000 iterations saved
+                mu.vect sd.vect     2.5%      25%      50%      75%    97.5% Rhat n.eff
+icept[1]          1.587   0.089    1.418    1.525    1.587    1.646    1.772 1.01   280
+icept[2]          1.425   0.062    1.307    1.383    1.423    1.466    1.549 1.00   630
+icept[3]          1.491   0.131    1.255    1.400    1.484    1.574    1.762 1.01   300
+icept[4]          1.499   0.209    1.145    1.350    1.483    1.637    1.936 1.01   200
+icept[5]          1.387   0.070    1.257    1.340    1.386    1.431    1.530 1.01   220
+icept[6]          1.434   0.107    1.246    1.358    1.426    1.502    1.658 1.01   430
+icept[7]          1.481   0.147    1.227    1.375    1.470    1.573    1.806 1.01   270
+icept[8]          1.474   0.188    1.162    1.340    1.453    1.588    1.887 1.03    76
+icept[9]          1.909   0.099    1.731    1.841    1.904    1.969    2.125 1.01   340
+icept[10]         1.402   0.132    1.156    1.310    1.401    1.489    1.672 1.02   140
+lambda[1]         0.406   0.185    0.072    0.273    0.402    0.530    0.792 1.00  1000
+lambda[2]         0.428   0.195    0.076    0.292    0.420    0.556    0.829 1.01  3500
+lambda[3]         0.992   0.197    0.604    0.867    0.992    1.117    1.383 1.01   290
+lambda[4]         0.951   0.239    0.482    0.789    0.952    1.109    1.415 1.01  1000
+lambda[5]         0.492   0.203    0.133    0.351    0.479    0.618    0.927 1.00   550
+lambda[6]         0.441   0.188    0.087    0.308    0.433    0.564    0.820 1.00   730
+lambda[7]         0.654   0.188    0.293    0.527    0.652    0.783    1.020 1.01   520
+lambda[8]         0.668   0.204    0.283    0.531    0.663    0.801    1.080 1.01   230
+lambda[9]         0.583   0.189    0.218    0.456    0.581    0.705    0.957 1.01  2700
+lambda[10]        1.013   0.192    0.638    0.881    1.011    1.146    1.387 1.01   380
+lambda.std[1]     0.363   0.143    0.071    0.264    0.373    0.468    0.621 1.00  1100
+lambda.std[2]     0.379   0.147    0.075    0.280    0.387    0.486    0.638 1.01  3000
+lambda.std[3]     0.694   0.075    0.517    0.655    0.704    0.745    0.810 1.02   330
+lambda.std[4]     0.673   0.100    0.434    0.619    0.690    0.743    0.817 1.03  1300
+lambda.std[5]     0.425   0.142    0.132    0.331    0.432    0.526    0.680 1.00   660
+lambda.std[6]     0.389   0.141    0.087    0.295    0.397    0.492    0.634 1.00   840
+lambda.std[7]     0.534   0.113    0.281    0.466    0.546    0.616    0.714 1.01   560
+lambda.std[8]     0.540   0.119    0.273    0.469    0.553    0.625    0.734 1.01   260
+lambda.std[9]     0.489   0.123    0.213    0.415    0.502    0.576    0.691 1.01  2400
+lambda.std[10]    0.702   0.070    0.538    0.661    0.711    0.753    0.811 1.01   380
+prec[1]           1.773   0.217    1.374    1.623    1.762    1.912    2.218 1.00  4000
+prec[2]           3.687   0.500    2.797    3.351    3.651    3.998    4.750 1.00   840
+prec[3]           4.212   0.575    3.185    3.811    4.180    4.586    5.432 1.00  4000
+prec[4]           2.547   0.333    1.950    2.319    2.535    2.758    3.234 1.00  4000
+prec[5]           2.879   0.367    2.199    2.621    2.862    3.116    3.642 1.00  4000
+prec[6]           3.033   0.384    2.332    2.766    3.016    3.286    3.829 1.00  2300
+prec[7]           5.018   0.681    3.790    4.528    4.990    5.468    6.442 1.00  4000
+prec[8]           3.931   0.529    2.991    3.567    3.887    4.257    5.069 1.00  3300
+prec[9]           2.602   0.332    1.986    2.370    2.591    2.819    3.306 1.00  3500
+prec[10]          6.887   1.032    5.083    6.163    6.812    7.521    9.163 1.00  2900
+prec.s            9.786   1.734    6.958    8.563    9.623   10.792   13.698 1.01   410
+reli.maximal      0.837   0.029    0.769    0.820    0.840    0.857    0.883 1.01   250
+reli.omega        0.811   0.034    0.733    0.791    0.815    0.835    0.865 1.01   260
+rho               0.202   0.054    0.101    0.164    0.200    0.235    0.313 1.03    95
+sigma.ts          0.000   0.054   -0.108   -0.036    0.001    0.037    0.101 1.03    94
+tau[1,1]         -0.945   0.173   -1.297   -1.059   -0.945   -0.828   -0.607 1.00  2300
+tau[2,1]         -0.103   0.159   -0.420   -0.212   -0.099    0.007    0.202 1.00  3500
+tau[3,1]         -1.830   0.235   -2.321   -1.979   -1.826   -1.668   -1.401 1.00  1200
+tau[4,1]         -2.553   0.345   -3.290   -2.776   -2.543   -2.307   -1.909 1.00   870
+tau[5,1]         -0.198   0.158   -0.514   -0.306   -0.193   -0.092    0.110 1.00  1800
+tau[6,1]         -1.938   0.229   -2.402   -2.093   -1.929   -1.778   -1.506 1.00   800
+tau[7,1]         -2.532   0.296   -3.154   -2.725   -2.512   -2.327   -2.004 1.01   480
+tau[8,1]         -2.966   0.359   -3.754   -3.187   -2.934   -2.725   -2.322 1.01   310
+tau[9,1]         -1.406   0.197   -1.808   -1.535   -1.399   -1.271   -1.035 1.00  4000
+tau[10,1]        -2.053   0.245   -2.560   -2.213   -2.041   -1.884   -1.604 1.00   530
+theta[1]          1.199   0.167    1.005    1.075    1.161    1.281    1.627 1.01   520
+theta[2]          1.222   0.186    1.006    1.085    1.176    1.309    1.687 1.00  2400
+theta[3]          2.022   0.398    1.365    1.752    1.983    2.247    2.912 1.01   260
+theta[4]          1.961   0.462    1.232    1.622    1.907    2.229    3.001 1.00   700
+theta[5]          1.283   0.223    1.018    1.123    1.229    1.382    1.859 1.01   310
+theta[6]          1.230   0.180    1.008    1.095    1.187    1.319    1.672 1.01   410
+theta[7]          1.463   0.252    1.086    1.278    1.425    1.613    2.041 1.01   480
+theta[8]          1.488   0.289    1.080    1.282    1.440    1.642    2.167 1.01   200
+theta[9]          1.376   0.233    1.048    1.208    1.338    1.497    1.916 1.00  1800
+theta[10]         2.064   0.394    1.407    1.777    2.023    2.313    2.925 1.01   390
+deviance       3021.832  37.179 2949.587 2996.622 3021.088 3046.593 3096.510 1.00   860
+
+For each parameter, n.eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+
+DIC info (using the rule, pD = var(deviance)/2)
+pD = 689.2 and DIC = 3711.1
+DIC is an estimate of expected predictive error (lower deviance is better).</code></pre>
+</div>
+<div id="posterior-distribution-summary" class="section level2">
+<h2>Posterior Distribution Summary</h2>
+<pre class="r"><code>jags.mcmc &lt;- as.mcmc(model.fit)
+a &lt;- colnames(as.data.frame(jags.mcmc[[1]]))
+fit.mcmc &lt;- data.frame(as.matrix(jags.mcmc, chains = T, iters = T))
+colnames(fit.mcmc) &lt;- c(&quot;chain&quot;, &quot;iter&quot;, a)
+fit.mcmc.ggs &lt;- ggmcmc::ggs(jags.mcmc) # for GRB plot
+
+# save posterior draws for later
+write.csv(x=fit.mcmc, file=paste0(getwd(),&quot;/data/posterior_draws_m2.csv&quot;))</code></pre>
+<div id="categroy-thresholds-tau" class="section level3">
+<h3>Categroy Thresholds (<span class="math inline">\(\tau\)</span>)</h3>
+<pre class="r"><code># tau
+bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;tau&quot;, prob = 0.8); ggsave(&quot;fig/model2_tau_dens.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-tau-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;tau&quot;); ggsave(&quot;fig/model2_tau_acf.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-tau-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;tau&quot;); ggsave(&quot;fig/model2_tau_trace.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-tau-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;tau&quot;); ggsave(&quot;fig/model2_tau_grb.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-tau-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div id="factor-loadings-lambda" class="section level3">
+<h3>Factor Loadings (<span class="math inline">\(\lambda\)</span>)</h3>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;lambda&quot;, prob = 0.8)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-lambda-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;lambda&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-lambda-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;lambda&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-lambda-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;lambda&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-lambda-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;lambda.std&quot;, prob = 0.8); ggsave(&quot;fig/model2_lambda_dens.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-lambda-std-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;lambda.std&quot;); ggsave(&quot;fig/model2_lambda_acf.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-lambda-std-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;lambda.std&quot;); ggsave(&quot;fig/model2_lambda_trace.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-lambda-std-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;lambda.std&quot;); ggsave(&quot;fig/model2_lambda_grb.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-lambda-std-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div id="latent-response-total-variance-theta" class="section level3">
+<h3>Latent Response Total Variance (<span
+class="math inline">\(\theta\)</span>)</h3>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;theta&quot;, prob = 0.8); ggsave(&quot;fig/model2_theta_dens.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-theta-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;theta&quot;); ggsave(&quot;fig/model2_theta_acf.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-theta-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;theta&quot;); ggsave(&quot;fig/model2_theta_trace.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-theta-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;theta&quot;); ggsave(&quot;fig/model2_theta_grb.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-theta-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div id="response-time-intercept-beta_lrt" class="section level3">
+<h3>Response Time Intercept (<span
+class="math inline">\(\beta_{lrt}\)</span>)</h3>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;icept&quot;, prob = 0.8); ggsave(&quot;fig/model2_icept_dens.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-bet-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;icept&quot;); ggsave(&quot;fig/model2_icept_acf.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-bet-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;icept&quot;); ggsave(&quot;fig/model2_icept_trace.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-bet-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;icept&quot;); ggsave(&quot;fig/model2_icept_grb.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-bet-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div id="response-time-precision-sigma_lrt" class="section level3">
+<h3>Response Time Precision (<span
+class="math inline">\(\sigma_{lrt}\)</span>)</h3>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc,pars = paste0(&quot;prec[&quot;,1:5,&quot;]&quot;), prob = 0.8); ggsave(&quot;fig/model2_prec_dens.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-sigma-lrt-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, pars = paste0(&quot;prec[&quot;,1:5,&quot;]&quot;)); ggsave(&quot;fig/model2_prec_acf.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-sigma-lrt-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, pars = paste0(&quot;prec[&quot;,1:5,&quot;]&quot;)); ggsave(&quot;fig/model2_prec_trace.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-sigma-lrt-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;prec&quot;); ggsave(&quot;fig/model2_prec_grb.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-sigma-lrt-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div id="speed-factor-variance-sigma_s" class="section level3">
+<h3>Speed Factor Variance (<span
+class="math inline">\(\sigma_s\)</span>)</h3>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;prec.s&quot;, prob = 0.8); ggsave(&quot;fig/model2_precs_dens.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-speed-prec-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;prec.s&quot;); ggsave(&quot;fig/model2_precs_acf.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-speed-prec-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;prec.s&quot;); ggsave(&quot;fig/model2_precs_trace.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-speed-prec-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;prec.s&quot;); ggsave(&quot;fig/model2_precs_grb.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-speed-prec-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div id="factor-covariance-sigma_ts" class="section level3">
+<h3>Factor Covariance (<span
+class="math inline">\(\sigma_{ts}\)</span>)</h3>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;sigma.ts&quot;, prob = 0.8); ggsave(&quot;fig/model2_sigmats_dens.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-sigma-ts-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;sigma.ts&quot;); ggsave(&quot;fig/model2_sigmats_acf.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-sigma-ts-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;sigma.ts&quot;); ggsave(&quot;fig/model2_sigmats_trace.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-sigma-ts-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;sigma.ts&quot;); ggsave(&quot;fig/model2_sigmats_grb.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-sigma-ts-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div id="pid-rho" class="section level3">
+<h3>PID (<span class="math inline">\(\rho\)</span>)</h3>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;rho&quot;, prob = 0.8); ggsave(&quot;fig/model2_rho_dens.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-rho-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;rho&quot;); ggsave(&quot;fig/model2_rho_acf.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-rho-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;rho&quot;); ggsave(&quot;fig/model2_rho_trace.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-rho-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;rho&quot;); ggsave(&quot;fig/model2_rho_grb.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-rho-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div id="factor-reliability-omega-omega" class="section level3">
+<h3>Factor Reliability Omega (<span
+class="math inline">\(\omega\)</span>)</h3>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;reli.omega&quot;, prob = 0.8); ggsave(&quot;fig/model2_omega_dens.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-omega-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;reli.omega&quot;); ggsave(&quot;fig/model2_omega_acf.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-omega-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;reli.omega&quot;); ggsave(&quot;fig/model2_omega_trace.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-omega-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;reli.omega&quot;); ggsave(&quot;fig/model2_omega_grb.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-omega-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code># extract omega posterior for results comparison
+extracted_omega &lt;- data.frame(model_2 = fit.mcmc$reli.omega)
+write.csv(x=extracted_omega, file=paste0(getwd(),&quot;/data/extracted_omega_m2.csv&quot;))</code></pre>
+</div>
+<div id="factor-reliability-maximal" class="section level3">
+<h3>Factor Reliability maximal</h3>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;reli.maximal&quot;, prob = 0.8); ggsave(&quot;fig/model2_maximal_dens.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-maximal-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;reli.maximal&quot;); ggsave(&quot;fig/model2_maximal_acf.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-maximal-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;reli.maximal&quot;); ggsave(&quot;fig/model2_maximal_trace.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-maximal-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;reli.maximal&quot;); ggsave(&quot;fig/model2_maximal_grb.pdf&quot;)</code></pre>
+<p><img src="figure/model2_results.Rmd/post-summary-maximal-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Saving 7 x 5 in image</code></pre>
+<pre class="r"><code># extract maximal posterior for results comparison
+extracted_omega &lt;- data.frame(model_2 = fit.mcmc$reli.maximal)
+write.csv(x=extracted_omega, file=paste0(getwd(),&quot;/data/extracted_maximal_m2.csv&quot;))</code></pre>
+</div>
+</div>
+<div id="posterior-predictive-distributions" class="section level2">
+<h2>Posterior Predictive Distributions</h2>
+<pre class="r"><code># Posterior Predictive Check
+Niter &lt;- 200
+model.fit$model$recompile()</code></pre>
+<pre><code>Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 2840
+   Unobserved stochastic nodes: 1748
+   Total graph size: 19008
+
+Initializing model</code></pre>
+<pre class="r"><code>fit.extra &lt;- rjags::jags.samples(model.fit$model, variable.names = &quot;pi&quot;, n.iter = Niter)</code></pre>
+<pre><code>NOTE: Stopping adaptation</code></pre>
+<pre class="r"><code>N &lt;- 142
+nit &lt;- 10
+nchain &lt;- 4
+C &lt;- 2
+n &lt;- i &lt;- iter &lt;- ppc.row.i &lt;- 1
+y.prob.ppc &lt;- array(dim=c(Niter*nchain, nit, C))
+for(chain in 1:nchain){
+  for(iter in 1:Niter){
+    # initialize simulated y for this iteration
+    y &lt;- matrix(nrow=N, ncol=nit)
+    # loop over item
+    for(i in 1:nit){
+      # simulated data for item i for each person
+      for(n in 1:N){
+        y[n,i] &lt;- sample(1:C, 1, prob = fit.extra$pi[n, i, 1:C, iter, chain])
+      }
+      # computer proportion of each response category
+      for(c in 1:C){
+        y.prob.ppc[ppc.row.i,i,c] &lt;- sum(y[,i]==c)/N
+      }
+    }
+    
+    # update row of output
+    ppc.row.i = ppc.row.i + 1
+  }
+}
+
+yppcmat &lt;- matrix(c(y.prob.ppc), ncol=1)
+z &lt;- expand.grid(1:(Niter*nchain), 1:nit, 1:C)
+yppcmat &lt;- data.frame(  iter = z[,1], nit=z[,2], C=z[,3], yppc = yppcmat)
+
+ymat &lt;- model.fit$model$data()[[4]]
+y.prob &lt;- matrix(ncol=C, nrow=nit)
+for(i in 1:nit){
+  for(c in 1:C){
+    y.prob[i,c] &lt;- sum(ymat[,i]==c-1)/N
+  }
+}
+yobsmat &lt;- matrix(c(y.prob), ncol=1)
+z &lt;- expand.grid(1:nit, 1:C)
+yobsmat &lt;- data.frame(nit=z[,1], C=z[,2], yobs = yobsmat)
+plot.ppc &lt;- full_join(yppcmat, yobsmat)</code></pre>
+<pre><code>Joining, by = c(&quot;nit&quot;, &quot;C&quot;)</code></pre>
+<pre class="r"><code>p &lt;- plot.ppc %&gt;%
+  mutate(C    = as.factor(C),
+         item = nit) %&gt;%
+  ggplot()+
+  geom_boxplot(aes(x=C,y=y.prob.ppc), outlier.colour = NA)+
+  geom_point(aes(x=C,y=yobs), color=&quot;red&quot;)+
+  lims(y=c(0, 1))+
+  labs(y=&quot;Posterior Predictive Category Proportion&quot;, x=&quot;Item Category&quot;)+
+  facet_wrap(.~nit, nrow=1)+
+  theme_bw()+
+  theme(
+    panel.grid = element_blank(),
+    strip.background = element_rect(fill=&quot;white&quot;)
+  )
+p</code></pre>
+<p><img src="figure/model2_results.Rmd/model2-ppd-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(filename = &quot;fig/model2_ppc_y.pdf&quot;,plot=p,width = 6, height=3,units=&quot;in&quot;)
+ggsave(filename = &quot;fig/model2_ppc_y.png&quot;,plot=p,width = 6, height=3,units=&quot;in&quot;)
+ggsave(filename = &quot;fig/model2_ppc_y.eps&quot;,plot=p,width = 6, height=3,units=&quot;in&quot;)</code></pre>
+</div>
+</div>
+<div id="manuscript-table-and-figures" class="section level1">
+<h1>Manuscript Table and Figures</h1>
+<div id="table" class="section level2">
+<h2>Table</h2>
+<pre class="r"><code># print to xtable
+print(
+  xtable(
+    model.fit$BUGSoutput$summary,
+    caption = c(&quot;study4 Model 2 posterior distribution summary&quot;)
+    ,align = &quot;lrrrrrrrrr&quot;
+  ),
+  include.rownames=T,
+  booktabs=T
+)</code></pre>
+<pre><code>% latex table generated in R 4.2.2 by xtable 1.8-4 package
+% Thu Feb  2 16:25:47 2023
+\begin{table}[ht]
+\centering
+\begin{tabular}{lrrrrrrrrr}
+  \toprule
+ &amp; mean &amp; sd &amp; 2.5\% &amp; 25\% &amp; 50\% &amp; 75\% &amp; 97.5\% &amp; Rhat &amp; n.eff \\ 
+  \midrule
+deviance &amp; 3021.83 &amp; 37.18 &amp; 2949.59 &amp; 2996.62 &amp; 3021.09 &amp; 3046.59 &amp; 3096.51 &amp; 1.00 &amp; 860.00 \\ 
+  icept[1] &amp; 1.59 &amp; 0.09 &amp; 1.42 &amp; 1.52 &amp; 1.59 &amp; 1.65 &amp; 1.77 &amp; 1.01 &amp; 280.00 \\ 
+  icept[2] &amp; 1.42 &amp; 0.06 &amp; 1.31 &amp; 1.38 &amp; 1.42 &amp; 1.47 &amp; 1.55 &amp; 1.00 &amp; 630.00 \\ 
+  icept[3] &amp; 1.49 &amp; 0.13 &amp; 1.25 &amp; 1.40 &amp; 1.48 &amp; 1.57 &amp; 1.76 &amp; 1.01 &amp; 300.00 \\ 
+  icept[4] &amp; 1.50 &amp; 0.21 &amp; 1.14 &amp; 1.35 &amp; 1.48 &amp; 1.64 &amp; 1.94 &amp; 1.01 &amp; 200.00 \\ 
+  icept[5] &amp; 1.39 &amp; 0.07 &amp; 1.26 &amp; 1.34 &amp; 1.39 &amp; 1.43 &amp; 1.53 &amp; 1.01 &amp; 220.00 \\ 
+  icept[6] &amp; 1.43 &amp; 0.11 &amp; 1.25 &amp; 1.36 &amp; 1.43 &amp; 1.50 &amp; 1.66 &amp; 1.01 &amp; 430.00 \\ 
+  icept[7] &amp; 1.48 &amp; 0.15 &amp; 1.23 &amp; 1.37 &amp; 1.47 &amp; 1.57 &amp; 1.81 &amp; 1.01 &amp; 270.00 \\ 
+  icept[8] &amp; 1.47 &amp; 0.19 &amp; 1.16 &amp; 1.34 &amp; 1.45 &amp; 1.59 &amp; 1.89 &amp; 1.04 &amp; 76.00 \\ 
+  icept[9] &amp; 1.91 &amp; 0.10 &amp; 1.73 &amp; 1.84 &amp; 1.90 &amp; 1.97 &amp; 2.12 &amp; 1.01 &amp; 340.00 \\ 
+  icept[10] &amp; 1.40 &amp; 0.13 &amp; 1.16 &amp; 1.31 &amp; 1.40 &amp; 1.49 &amp; 1.67 &amp; 1.02 &amp; 140.00 \\ 
+  lambda[1] &amp; 0.41 &amp; 0.18 &amp; 0.07 &amp; 0.27 &amp; 0.40 &amp; 0.53 &amp; 0.79 &amp; 1.00 &amp; 1000.00 \\ 
+  lambda[2] &amp; 0.43 &amp; 0.20 &amp; 0.08 &amp; 0.29 &amp; 0.42 &amp; 0.56 &amp; 0.83 &amp; 1.01 &amp; 3500.00 \\ 
+  lambda[3] &amp; 0.99 &amp; 0.20 &amp; 0.60 &amp; 0.87 &amp; 0.99 &amp; 1.12 &amp; 1.38 &amp; 1.01 &amp; 290.00 \\ 
+  lambda[4] &amp; 0.95 &amp; 0.24 &amp; 0.48 &amp; 0.79 &amp; 0.95 &amp; 1.11 &amp; 1.41 &amp; 1.01 &amp; 1000.00 \\ 
+  lambda[5] &amp; 0.49 &amp; 0.20 &amp; 0.13 &amp; 0.35 &amp; 0.48 &amp; 0.62 &amp; 0.93 &amp; 1.01 &amp; 550.00 \\ 
+  lambda[6] &amp; 0.44 &amp; 0.19 &amp; 0.09 &amp; 0.31 &amp; 0.43 &amp; 0.56 &amp; 0.82 &amp; 1.00 &amp; 730.00 \\ 
+  lambda[7] &amp; 0.65 &amp; 0.19 &amp; 0.29 &amp; 0.53 &amp; 0.65 &amp; 0.78 &amp; 1.02 &amp; 1.01 &amp; 520.00 \\ 
+  lambda[8] &amp; 0.67 &amp; 0.20 &amp; 0.28 &amp; 0.53 &amp; 0.66 &amp; 0.80 &amp; 1.08 &amp; 1.01 &amp; 230.00 \\ 
+  lambda[9] &amp; 0.58 &amp; 0.19 &amp; 0.22 &amp; 0.46 &amp; 0.58 &amp; 0.71 &amp; 0.96 &amp; 1.01 &amp; 2700.00 \\ 
+  lambda[10] &amp; 1.01 &amp; 0.19 &amp; 0.64 &amp; 0.88 &amp; 1.01 &amp; 1.15 &amp; 1.39 &amp; 1.01 &amp; 380.00 \\ 
+  lambda.std[1] &amp; 0.36 &amp; 0.14 &amp; 0.07 &amp; 0.26 &amp; 0.37 &amp; 0.47 &amp; 0.62 &amp; 1.00 &amp; 1100.00 \\ 
+  lambda.std[2] &amp; 0.38 &amp; 0.15 &amp; 0.08 &amp; 0.28 &amp; 0.39 &amp; 0.49 &amp; 0.64 &amp; 1.01 &amp; 3000.00 \\ 
+  lambda.std[3] &amp; 0.69 &amp; 0.08 &amp; 0.52 &amp; 0.66 &amp; 0.70 &amp; 0.74 &amp; 0.81 &amp; 1.02 &amp; 330.00 \\ 
+  lambda.std[4] &amp; 0.67 &amp; 0.10 &amp; 0.43 &amp; 0.62 &amp; 0.69 &amp; 0.74 &amp; 0.82 &amp; 1.04 &amp; 1300.00 \\ 
+  lambda.std[5] &amp; 0.42 &amp; 0.14 &amp; 0.13 &amp; 0.33 &amp; 0.43 &amp; 0.53 &amp; 0.68 &amp; 1.00 &amp; 660.00 \\ 
+  lambda.std[6] &amp; 0.39 &amp; 0.14 &amp; 0.09 &amp; 0.29 &amp; 0.40 &amp; 0.49 &amp; 0.63 &amp; 1.00 &amp; 840.00 \\ 
+  lambda.std[7] &amp; 0.53 &amp; 0.11 &amp; 0.28 &amp; 0.47 &amp; 0.55 &amp; 0.62 &amp; 0.71 &amp; 1.01 &amp; 560.00 \\ 
+  lambda.std[8] &amp; 0.54 &amp; 0.12 &amp; 0.27 &amp; 0.47 &amp; 0.55 &amp; 0.63 &amp; 0.73 &amp; 1.01 &amp; 260.00 \\ 
+  lambda.std[9] &amp; 0.49 &amp; 0.12 &amp; 0.21 &amp; 0.41 &amp; 0.50 &amp; 0.58 &amp; 0.69 &amp; 1.01 &amp; 2400.00 \\ 
+  lambda.std[10] &amp; 0.70 &amp; 0.07 &amp; 0.54 &amp; 0.66 &amp; 0.71 &amp; 0.75 &amp; 0.81 &amp; 1.01 &amp; 380.00 \\ 
+  prec[1] &amp; 1.77 &amp; 0.22 &amp; 1.37 &amp; 1.62 &amp; 1.76 &amp; 1.91 &amp; 2.22 &amp; 1.00 &amp; 4000.00 \\ 
+  prec[2] &amp; 3.69 &amp; 0.50 &amp; 2.80 &amp; 3.35 &amp; 3.65 &amp; 4.00 &amp; 4.75 &amp; 1.00 &amp; 840.00 \\ 
+  prec[3] &amp; 4.21 &amp; 0.58 &amp; 3.19 &amp; 3.81 &amp; 4.18 &amp; 4.59 &amp; 5.43 &amp; 1.00 &amp; 4000.00 \\ 
+  prec[4] &amp; 2.55 &amp; 0.33 &amp; 1.95 &amp; 2.32 &amp; 2.54 &amp; 2.76 &amp; 3.23 &amp; 1.00 &amp; 4000.00 \\ 
+  prec[5] &amp; 2.88 &amp; 0.37 &amp; 2.20 &amp; 2.62 &amp; 2.86 &amp; 3.12 &amp; 3.64 &amp; 1.00 &amp; 4000.00 \\ 
+  prec[6] &amp; 3.03 &amp; 0.38 &amp; 2.33 &amp; 2.77 &amp; 3.02 &amp; 3.29 &amp; 3.83 &amp; 1.00 &amp; 2300.00 \\ 
+  prec[7] &amp; 5.02 &amp; 0.68 &amp; 3.79 &amp; 4.53 &amp; 4.99 &amp; 5.47 &amp; 6.44 &amp; 1.00 &amp; 4000.00 \\ 
+  prec[8] &amp; 3.93 &amp; 0.53 &amp; 2.99 &amp; 3.57 &amp; 3.89 &amp; 4.26 &amp; 5.07 &amp; 1.00 &amp; 3300.00 \\ 
+  prec[9] &amp; 2.60 &amp; 0.33 &amp; 1.99 &amp; 2.37 &amp; 2.59 &amp; 2.82 &amp; 3.31 &amp; 1.00 &amp; 3500.00 \\ 
+  prec[10] &amp; 6.89 &amp; 1.03 &amp; 5.08 &amp; 6.16 &amp; 6.81 &amp; 7.52 &amp; 9.16 &amp; 1.00 &amp; 2900.00 \\ 
+  prec.s &amp; 9.79 &amp; 1.73 &amp; 6.96 &amp; 8.56 &amp; 9.62 &amp; 10.79 &amp; 13.70 &amp; 1.01 &amp; 410.00 \\ 
+  reli.maximal &amp; 0.84 &amp; 0.03 &amp; 0.77 &amp; 0.82 &amp; 0.84 &amp; 0.86 &amp; 0.88 &amp; 1.01 &amp; 250.00 \\ 
+  reli.omega &amp; 0.81 &amp; 0.03 &amp; 0.73 &amp; 0.79 &amp; 0.82 &amp; 0.83 &amp; 0.86 &amp; 1.01 &amp; 260.00 \\ 
+  rho &amp; 0.20 &amp; 0.05 &amp; 0.10 &amp; 0.16 &amp; 0.20 &amp; 0.24 &amp; 0.31 &amp; 1.03 &amp; 95.00 \\ 
+  sigma.ts &amp; -0.00 &amp; 0.05 &amp; -0.11 &amp; -0.04 &amp; 0.00 &amp; 0.04 &amp; 0.10 &amp; 1.03 &amp; 94.00 \\ 
+  tau[1,1] &amp; -0.94 &amp; 0.17 &amp; -1.30 &amp; -1.06 &amp; -0.94 &amp; -0.83 &amp; -0.61 &amp; 1.00 &amp; 2300.00 \\ 
+  tau[2,1] &amp; -0.10 &amp; 0.16 &amp; -0.42 &amp; -0.21 &amp; -0.10 &amp; 0.01 &amp; 0.20 &amp; 1.00 &amp; 3500.00 \\ 
+  tau[3,1] &amp; -1.83 &amp; 0.24 &amp; -2.32 &amp; -1.98 &amp; -1.83 &amp; -1.67 &amp; -1.40 &amp; 1.00 &amp; 1200.00 \\ 
+  tau[4,1] &amp; -2.55 &amp; 0.35 &amp; -3.29 &amp; -2.78 &amp; -2.54 &amp; -2.31 &amp; -1.91 &amp; 1.00 &amp; 870.00 \\ 
+  tau[5,1] &amp; -0.20 &amp; 0.16 &amp; -0.51 &amp; -0.31 &amp; -0.19 &amp; -0.09 &amp; 0.11 &amp; 1.00 &amp; 1800.00 \\ 
+  tau[6,1] &amp; -1.94 &amp; 0.23 &amp; -2.40 &amp; -2.09 &amp; -1.93 &amp; -1.78 &amp; -1.51 &amp; 1.00 &amp; 800.00 \\ 
+  tau[7,1] &amp; -2.53 &amp; 0.30 &amp; -3.15 &amp; -2.73 &amp; -2.51 &amp; -2.33 &amp; -2.00 &amp; 1.01 &amp; 480.00 \\ 
+  tau[8,1] &amp; -2.97 &amp; 0.36 &amp; -3.75 &amp; -3.19 &amp; -2.93 &amp; -2.72 &amp; -2.32 &amp; 1.01 &amp; 310.00 \\ 
+  tau[9,1] &amp; -1.41 &amp; 0.20 &amp; -1.81 &amp; -1.54 &amp; -1.40 &amp; -1.27 &amp; -1.04 &amp; 1.00 &amp; 4000.00 \\ 
+  tau[10,1] &amp; -2.05 &amp; 0.24 &amp; -2.56 &amp; -2.21 &amp; -2.04 &amp; -1.88 &amp; -1.60 &amp; 1.01 &amp; 530.00 \\ 
+  theta[1] &amp; 1.20 &amp; 0.17 &amp; 1.01 &amp; 1.07 &amp; 1.16 &amp; 1.28 &amp; 1.63 &amp; 1.01 &amp; 520.00 \\ 
+  theta[2] &amp; 1.22 &amp; 0.19 &amp; 1.01 &amp; 1.09 &amp; 1.18 &amp; 1.31 &amp; 1.69 &amp; 1.00 &amp; 2400.00 \\ 
+  theta[3] &amp; 2.02 &amp; 0.40 &amp; 1.36 &amp; 1.75 &amp; 1.98 &amp; 2.25 &amp; 2.91 &amp; 1.01 &amp; 260.00 \\ 
+  theta[4] &amp; 1.96 &amp; 0.46 &amp; 1.23 &amp; 1.62 &amp; 1.91 &amp; 2.23 &amp; 3.00 &amp; 1.00 &amp; 700.00 \\ 
+  theta[5] &amp; 1.28 &amp; 0.22 &amp; 1.02 &amp; 1.12 &amp; 1.23 &amp; 1.38 &amp; 1.86 &amp; 1.01 &amp; 310.00 \\ 
+  theta[6] &amp; 1.23 &amp; 0.18 &amp; 1.01 &amp; 1.10 &amp; 1.19 &amp; 1.32 &amp; 1.67 &amp; 1.01 &amp; 410.00 \\ 
+  theta[7] &amp; 1.46 &amp; 0.25 &amp; 1.09 &amp; 1.28 &amp; 1.42 &amp; 1.61 &amp; 2.04 &amp; 1.01 &amp; 480.00 \\ 
+  theta[8] &amp; 1.49 &amp; 0.29 &amp; 1.08 &amp; 1.28 &amp; 1.44 &amp; 1.64 &amp; 2.17 &amp; 1.01 &amp; 200.00 \\ 
+  theta[9] &amp; 1.38 &amp; 0.23 &amp; 1.05 &amp; 1.21 &amp; 1.34 &amp; 1.50 &amp; 1.92 &amp; 1.00 &amp; 1800.00 \\ 
+  theta[10] &amp; 2.06 &amp; 0.39 &amp; 1.41 &amp; 1.78 &amp; 2.02 &amp; 2.31 &amp; 2.92 &amp; 1.01 &amp; 390.00 \\ 
+   \bottomrule
+\end{tabular}
+\caption{study4 Model 2 posterior distribution summary} 
+\end{table}</code></pre>
+</div>
+<div id="figure" class="section level2">
+<h2>Figure</h2>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.2 (2022-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 22621)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] car_3.1-0            carData_3.0-5        mvtnorm_1.1-3       
+ [4] LaplacesDemon_16.1.6 runjags_2.2.1-7      lme4_1.1-30         
+ [7] Matrix_1.5-1         sirt_3.12-66         R2jags_0.7-1        
+[10] rjags_4-13           eRm_1.0-2            diffIRT_1.5         
+[13] statmod_1.4.36       xtable_1.8-4         kableExtra_1.3.4    
+[16] lavaan_0.6-13.1768   polycor_0.8-1        bayesplot_1.9.0     
+[19] ggmcmc_1.5.1.1       coda_0.19-4          data.table_1.14.2   
+[22] patchwork_1.1.1      forcats_0.5.1        stringr_1.4.0       
+[25] dplyr_1.0.9          purrr_0.3.4          readr_2.1.2         
+[28] tidyr_1.2.0          tibble_3.1.7         ggplot2_3.3.6       
+[31] tidyverse_1.3.2      workflowr_1.7.0     
+
+loaded via a namespace (and not attached):
+  [1] readxl_1.4.0         backports_1.4.1      systemfonts_1.0.4   
+  [4] plyr_1.8.7           splines_4.2.2        digest_0.6.29       
+  [7] htmltools_0.5.2      fansi_1.0.3          magrittr_2.0.3      
+ [10] checkmate_2.1.0      googlesheets4_1.0.0  tzdb_0.3.0          
+ [13] modelr_0.1.8         svglite_2.1.0        colorspace_2.0-3    
+ [16] rvest_1.0.2          textshaping_0.3.6    haven_2.5.0         
+ [19] xfun_0.31            callr_3.7.1          crayon_1.5.1        
+ [22] jsonlite_1.8.0       glue_1.6.2           gtable_0.3.0        
+ [25] gargle_1.2.0         webshot_0.5.3        distributional_0.3.0
+ [28] abind_1.4-5          scales_1.2.0         DBI_1.1.3           
+ [31] GGally_2.1.2         Rcpp_1.0.8.3         viridisLite_0.4.0   
+ [34] stats4_4.2.2         httr_1.4.3           RColorBrewer_1.1-3  
+ [37] posterior_1.2.2      ellipsis_0.3.2       pkgconfig_2.0.3     
+ [40] reshape_0.8.9        farver_2.1.1         sass_0.4.2          
+ [43] dbplyr_2.2.1         utf8_1.2.2           tidyselect_1.1.2    
+ [46] labeling_0.4.2       rlang_1.0.6          reshape2_1.4.4      
+ [49] later_1.3.0          munsell_0.5.0        cellranger_1.1.0    
+ [52] tools_4.2.2          cachem_1.0.6         cli_3.4.1           
+ [55] generics_0.1.3       broom_1.0.0          ggridges_0.5.3      
+ [58] evaluate_0.15        fastmap_1.1.0        yaml_2.3.5          
+ [61] ragg_1.2.4           processx_3.7.0       knitr_1.39          
+ [64] fs_1.5.2             admisc_0.29          nlme_3.1-160        
+ [67] whisker_0.4          xml2_1.3.3           compiler_4.2.2      
+ [70] rstudioapi_0.13      reprex_2.0.1         bslib_0.4.0         
+ [73] pbivnorm_0.6.0       stringi_1.7.6        highr_0.9           
+ [76] ps_1.7.0             lattice_0.20-45      TAM_4.0-16          
+ [79] psych_2.2.5          nloptr_2.0.3         tensorA_0.36.2      
+ [82] vctrs_0.4.1          CDM_8.1-12           pillar_1.8.0        
+ [85] lifecycle_1.0.1      jquerylib_0.1.4      httpuv_1.6.5        
+ [88] R2WinBUGS_2.1-21     R6_2.5.1             promises_1.2.0.1    
+ [91] codetools_0.2-18     boot_1.3-28          MASS_7.3-58.1       
+ [94] assertthat_0.2.1     rprojroot_2.0.3      withr_2.5.0         
+ [97] mnormt_2.1.1         parallel_4.2.2       hms_1.1.1           
+[100] grid_4.2.2           minqa_1.2.4          rmarkdown_2.14      
+[103] googledrive_2.0.0    git2r_0.30.1         getPass_0.2-2       
+[106] lubridate_1.8.0     </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
