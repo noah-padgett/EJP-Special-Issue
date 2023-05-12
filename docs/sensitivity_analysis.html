@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="R. Noah Padgett" />
+
+<meta name="date" content="2023-05-12" />
+
+<title>Extroversion Data Analysis</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">EJP-Special-Issue</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Extroversion Data Analysis</h1>
+<h3 class="subtitle">Sensitivity Analysis</h3>
+<h4 class="author">R. Noah Padgett</h4>
+<h4 class="date">2023-05-12</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2023-05-12
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 2
+</p>
+<p>
+<strong>Knit directory:</strong> <code>EJP-Special-Issue/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220808code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20220808)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220808code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220808)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongdetected">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>Cache:</strong> detected </a>
+</p>
+</div>
+<div id="strongCachestrongdetected" class="panel-collapse collapse">
+<div class="panel-body">
+The following chunks had caches available:
+<ul>
+<li>
+model6
+</li>
+</ul>
+<p>To ensure reproducibility of the results, delete the cache directory
+<code>sensitivity_analysis_cache</code> and re-run the analysis. To have
+workflowr automatically delete the cache directory prior to building the
+file, set <code>delete_cache = TRUE</code> when running
+<code>wflow_build()</code> or <code>wflow_publish()</code>.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomnoahpadgettEJPSpecialIssuetree52556711da9a1b475db6ef5eebf23d8923da1a40targetblank5255671a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/noah-padgett/EJP-Special-Issue/tree/52556711da9a1b475db6ef5eebf23d8923da1a40" target="_blank">5255671</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomnoahpadgettEJPSpecialIssuetree52556711da9a1b475db6ef5eebf23d8923da1a40targetblank5255671a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/noah-padgett/EJP-Special-Issue/tree/52556711da9a1b475db6ef5eebf23d8923da1a40" target="_blank">5255671</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/model1_results_cache/
+    Ignored:    analysis/model2_results_cache/
+    Ignored:    analysis/model3_results_cache/
+    Ignored:    analysis/model4_results_cache/
+    Ignored:    analysis/sensitivity_analysis_cache/
+    Ignored:    data/extracted_maximal_m1.csv
+    Ignored:    data/extracted_maximal_m2.csv
+    Ignored:    data/extracted_maximal_m3.csv
+    Ignored:    data/extracted_maximal_m4.csv
+    Ignored:    data/extracted_omega_m1.csv
+    Ignored:    data/extracted_omega_m2.csv
+    Ignored:    data/extracted_omega_m3.csv
+    Ignored:    data/extracted_omega_m4.csv
+    Ignored:    data/posterior_draws_m1.csv
+    Ignored:    data/posterior_draws_m2.csv
+    Ignored:    data/posterior_draws_m3.csv
+    Ignored:    data/posterior_draws_m4.csv
+
+Untracked files:
+    Untracked:  fig/posterior_sensitity_omega_cauchy.pdf
+    Untracked:  fig/posterior_sensitity_omega_cauchy.png
+
+Unstaged changes:
+    Modified:   analysis/sensitivity_analysis.Rmd
+    Modified:   fig/posterior_sensitity_omega_uniform.pdf
+    Modified:   fig/posterior_sensitity_omega_uniform.png
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/sensitivity_analysis.Rmd</code>)
+and HTML (<code>docs/sensitivity_analysis.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/noah-padgett/EJP-Special-Issue/blob/659e4bda4cbf224ff098495e2dbdbe690086e7eb/analysis/sensitivity_analysis.Rmd" target="_blank">659e4bd</a>
+</td>
+<td>
+noah-padgett
+</td>
+<td>
+2023-02-08
+</td>
+<td>
+updated site with results
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code># Load packages &amp; utility functions
+source(&quot;code/load_packages.R&quot;)
+source(&quot;code/load_utility_functions.R&quot;)
+# environment options
+options(scipen = 999, digits=3)</code></pre>
+<pre class="r"><code># Load diffIRT package with data
+library(diffIRT)
+data(&quot;extraversion&quot;)
+mydata &lt;- na.omit(extraversion)</code></pre>
+<div id="half-cauchy-hyper-prior-for-lambda" class="section level2">
+<h2>Half-Cauchy Hyper-prior for <span
+class="math inline">\(\lambda\)</span></h2>
+<pre class="r"><code>cat(read_file(paste0(w.d, &quot;/code/JAGS/model_4_halfcauchy.txt&quot;)))</code></pre>
+<pre><code>model {
+### Model
+  for(p in 1:N){
+    for(i in 1:nit){
+      # data model
+      y[p,i] ~ dbern(omega[p,i,2])
+
+      # LRV
+      ystar[p,i] ~ dnorm(lambda[i]*eta[p], 1)
+
+      # Pr(nu = 2)
+      pi[p,i,2] = phi(ystar[p,i] - tau[i,1])
+      # Pr(nu = 1)
+      pi[p,i,1] = 1 - phi(ystar[p,i] - tau[i,1])
+
+      # log-RT model
+      dev[p,i]&lt;-lambda[i]*(eta[p] - tau[i,1])
+      mu.lrt[p,i] &lt;- icept[i] - speed[p] - rho * abs(dev[p,i])
+      lrt[p,i] ~ dnorm(mu.lrt[p,i], prec[i])
+
+      # MISCLASSIFICATION MODEL
+      for(c in 1:ncat){
+        # generate informative prior for misclassificaiton
+        #   parameters based on RT
+        for(ct in 1:ncat){
+          alpha[p,i,ct,c] &lt;- ifelse(c == ct,
+                                    ilogit(lrt[p,i]),
+                                    (1/(ncat-1))*(1-ilogit(lrt[p,i]))
+          )
+        }
+        # sample misclassification parameters using the informative priors
+        gamma[p,i,c,1:ncat] ~ ddirch(alpha[p,i,c,1:ncat])
+        # observed category prob (Pr(y=c))
+        omega[p,i, c] = gamma[p,i,c,1]*pi[p,i,1] +
+          gamma[p,i,c,2]*pi[p,i,2]
+      }
+
+    }
+  }
+  ### Priors
+  # person parameters
+  for(p in 1:N){
+    eta[p] ~ dnorm(0, 1) # latent ability
+    speed[p]~dnorm(sigma.ts*eta[p],prec.s)  # latent speed
+  }
+  sigma.ts ~ dnorm(0, 0.1)
+  prec.s ~ dgamma(.1,.1)
+  # transformations
+  sigma.t = pow(prec.s, -1) + pow(sigma.ts, 2) # speed variance
+  cor.ts = sigma.ts/(pow(sigma.t,0.5)) # LV correlation
+
+  for(i in 1:nit){
+    # lrt parameters
+    icept[i]~dnorm(0,.1)
+    prec[i]~dgamma(.1,.1)
+    # Thresholds
+    tau[i, 1] ~ dnorm(0.0,0.25)
+    # loadings
+    lambda[i] ~ dnorm(1, lambdatau)
+    # LRV total variance
+    # total variance = residual variance + fact. Var.
+    theta[i] = 1 + pow(lambda[i],2)
+    # standardized loading
+    lambda.std[i] = lambda[i]/pow(theta[i],0.5)
+  }
+  rho~dnorm(0,.1)I(0,)
+  #lambdatau ~ dunif(1, 10)
+  lambdatau ~ dt(0, 1, 4)I(0,)
+  invlambdatau = 1/lambdatau
+
+  # compute reliability estimates
+  lambda_sum[1] = lambda[1]
+  maximal_sum[1] = pow(lambda[1],2)
+  for(i in 2:nit){
+    #lambda_sum (sum factor loadings)
+    lambda_sum[i] = lambda_sum[i-1]+lambda[i]
+    maximal_sum[i] = maximal_sum[i-1] + pow(lambda[i],2)
+  }
+  reli.omega = (pow(lambda_sum[nit],2))/(pow(lambda_sum[nit],2)+nit)
+  reli.maximal = maximal_sum[nit]/(1+maximal_sum[nit])
+}</code></pre>
+<div id="model-results" class="section level3">
+<h3>Model results</h3>
+<pre class="r"><code># Save parameters
+jags.params &lt;- c(&quot;tau&quot;,
+                 &quot;lambda&quot;, &quot;lambda.std&quot;, &quot;lambdatau&quot;, &quot;invlambdatau&quot;,
+                 &quot;theta&quot;,
+                 &quot;icept&quot;,
+                 &quot;prec&quot;,
+                 &quot;prec.s&quot;,
+                 &quot;sigma.ts&quot;,
+                 &quot;rho&quot;,
+                 &quot;reli.omega&quot;, &quot;reli.maximal&quot;)
+# initial-values
+jags.inits &lt;- function(){
+    list(
+      &quot;tau&quot;=matrix(c(-0.64, -0.09, -1.05, -1.42, -0.11, -1.29, -1.59, -1.81, -0.93, -1.11), ncol=1, nrow=10),
+      &quot;lambda&quot;=rep(0.7,10),
+      &quot;eta&quot;=rnorm(142),
+      &quot;speed&quot;=rnorm(142),
+      &quot;ystar&quot;=matrix(c(0.7*rep(rnorm(142),10)), ncol=10),
+      &quot;rho&quot;=0.1,
+      &quot;icept&quot;=rep(0, 10),
+      &quot;prec.s&quot;=10,
+      &quot;prec&quot;=rep(4, 10),
+      &quot;sigma.ts&quot;=0.1
+    )
+  }
+jags.data &lt;- list(
+  y = mydata[,1:10],
+  lrt = mydata[,11:20],
+  N = nrow(mydata),
+  nit = 10,
+  ncat = 2
+)
+
+# Run model
+model.fit &lt;-  R2jags::jags(
+  model = paste0(w.d, &quot;/code/JAGS/model_4_uniform.txt&quot;),
+  parameters.to.save = jags.params,
+  inits = jags.inits,
+  data = jags.data,
+  n.chains = 4,
+  n.burnin = 5000,
+  n.iter = 10000
+)</code></pre>
+<pre><code>module glm loaded</code></pre>
+<pre><code>Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 2840
+   Unobserved stochastic nodes: 4588
+   Total graph size: 43551
+
+Initializing model</code></pre>
+<pre class="r"><code>print(model.fit, width=1000)</code></pre>
+<pre><code>Inference for Bugs model at &quot;C:/Users/noahp/Documents/GitHub/EJP-Special-Issue/code/JAGS/model_4_uniform.txt&quot;, fit using jags,
+ 4 chains, each with 10000 iterations (first 5000 discarded), n.thin = 5
+ n.sims = 4000 iterations saved
+                mu.vect sd.vect     2.5%      25%      50%      75%    97.5% Rhat n.eff
+icept[1]          1.683   0.130    1.460    1.591    1.674    1.764    1.958 1.00  1600
+icept[2]          1.458   0.081    1.320    1.404    1.452    1.504    1.645 1.03   130
+icept[3]          1.507   0.226    1.155    1.347    1.480    1.634    2.009 1.02   190
+icept[4]          1.343   0.274    0.997    1.153    1.291    1.467    1.993 1.04    90
+icept[5]          1.398   0.091    1.249    1.338    1.388    1.447    1.607 1.02   140
+icept[6]          1.487   0.188    1.224    1.354    1.448    1.582    1.939 1.01   400
+icept[7]          1.374   0.169    1.127    1.245    1.345    1.474    1.766 1.01   200
+icept[8]          1.338   0.222    1.048    1.177    1.292    1.451    1.897 1.01   290
+icept[9]          1.948   0.162    1.709    1.837    1.923    2.029    2.333 1.03   100
+icept[10]         1.349   0.200    1.020    1.205    1.333    1.472    1.811 1.03    76
+invlambdatau      0.349   0.274    0.170    0.201    0.257    0.379    1.098 1.05    93
+lambda[1]         1.328   0.430    0.600    1.042    1.295    1.566    2.314 1.02   120
+lambda[2]         1.387   0.482    0.521    1.067    1.349    1.666    2.482 1.03   140
+lambda[3]         1.599   0.422    0.826    1.314    1.577    1.852    2.566 1.03    97
+lambda[4]         1.212   0.481    0.301    0.891    1.216    1.517    2.209 1.01   810
+lambda[5]         1.130   0.447    0.323    0.827    1.114    1.396    2.096 1.04   120
+lambda[6]         0.663   0.394   -0.176    0.415    0.677    0.927    1.401 1.02   150
+lambda[7]         0.669   0.391   -0.208    0.438    0.682    0.923    1.400 1.02   180
+lambda[8]         0.675   0.409   -0.247    0.438    0.693    0.947    1.409 1.02   260
+lambda[9]         1.089   0.362    0.411    0.837    1.079    1.321    1.844 1.01   280
+lambda[10]        1.448   0.398    0.756    1.185    1.421    1.676    2.326 1.02   260
+lambda.std[1]     0.771   0.103    0.515    0.721    0.792    0.843    0.918 1.01   200
+lambda.std[2]     0.777   0.122    0.462    0.730    0.803    0.857    0.928 1.01   260
+lambda.std[3]     0.829   0.076    0.637    0.796    0.845    0.880    0.932 1.08   100
+lambda.std[4]     0.726   0.161    0.288    0.665    0.772    0.835    0.911 1.00  1600
+lambda.std[5]     0.707   0.153    0.308    0.637    0.744    0.813    0.903 1.01   300
+lambda.std[6]     0.500   0.249   -0.173    0.383    0.561    0.680    0.814 1.02   200
+lambda.std[7]     0.505   0.250   -0.204    0.401    0.564    0.678    0.814 1.03   150
+lambda.std[8]     0.507   0.261   -0.240    0.401    0.570    0.687    0.816 1.03   220
+lambda.std[9]     0.706   0.127    0.380    0.642    0.733    0.797    0.879 1.01   240
+lambda.std[10]    0.802   0.086    0.603    0.764    0.818    0.859    0.919 1.02   390
+lambdatau         3.737   1.441    0.911    2.641    3.896    4.965    5.888 1.05    93
+prec[1]           1.777   0.222    1.366    1.626    1.763    1.920    2.258 1.00  3300
+prec[2]           3.536   0.464    2.713    3.217    3.509    3.826    4.546 1.00  1300
+prec[3]           4.232   0.586    3.179    3.833    4.198    4.592    5.495 1.00  3800
+prec[4]           2.519   0.331    1.925    2.289    2.499    2.728    3.232 1.00  1600
+prec[5]           2.873   0.371    2.217    2.620    2.852    3.104    3.662 1.00  4000
+prec[6]           3.013   0.382    2.323    2.747    2.993    3.259    3.841 1.00  3200
+prec[7]           4.955   0.670    3.749    4.492    4.912    5.396    6.332 1.00  4000
+prec[8]           3.901   0.506    2.976    3.553    3.875    4.227    4.951 1.00  1600
+prec[9]           2.570   0.326    1.989    2.338    2.554    2.776    3.250 1.00  4000
+prec[10]          6.638   0.981    4.887    5.933    6.578    7.276    8.736 1.00   550
+prec.s           11.198   2.393    7.621    9.569   10.853   12.480   16.716 1.01   180
+reli.maximal      0.935   0.015    0.903    0.926    0.936    0.945    0.964 1.04    70
+reli.omega        0.923   0.019    0.881    0.913    0.925    0.936    0.955 1.03    91
+rho               0.087   0.042    0.014    0.058    0.087    0.113    0.177 1.06    68
+sigma.ts          0.085   0.065   -0.045    0.044    0.084    0.127    0.209 1.04    87
+tau[1,1]         -1.569   0.416   -2.499   -1.828   -1.535   -1.278   -0.841 1.03    93
+tau[2,1]         -0.099   0.327   -0.717   -0.316   -0.107    0.108    0.575 1.01   400
+tau[3,1]         -2.802   0.620   -4.206   -3.167   -2.719   -2.351   -1.806 1.01  1100
+tau[4,1]         -3.011   0.693   -4.570   -3.400   -2.935   -2.523   -1.902 1.05    66
+tau[5,1]         -0.395   0.357   -1.109   -0.632   -0.378   -0.153    0.258 1.01   340
+tau[6,1]         -3.769   0.958   -6.012   -4.316   -3.625   -3.077   -2.282 1.11    28
+tau[7,1]         -3.743   0.875   -5.810   -4.223   -3.641   -3.126   -2.369 1.05    60
+tau[8,1]         -4.140   0.900   -6.174   -4.677   -4.031   -3.508   -2.674 1.00  1900
+tau[9,1]         -2.183   0.450   -3.195   -2.457   -2.153   -1.859   -1.419 1.01   380
+tau[10,1]        -2.937   0.585   -4.179   -3.302   -2.903   -2.522   -1.914 1.02   170
+theta[1]          2.948   1.335    1.360    2.085    2.678    3.453    6.356 1.03    94
+theta[2]          3.157   1.495    1.273    2.138    2.820    3.777    7.158 1.02   140
+theta[3]          3.736   1.444    1.682    2.726    3.488    4.429    7.585 1.03   100
+theta[4]          2.701   1.292    1.090    1.793    2.478    3.303    5.881 1.00  1000
+theta[5]          2.478   1.151    1.104    1.684    2.242    2.948    5.393 1.03   120
+theta[6]          1.595   0.555    1.004    1.182    1.460    1.859    2.963 1.03   150
+theta[7]          1.601   0.536    1.006    1.199    1.466    1.852    2.959 1.01   180
+theta[8]          1.624   0.546    1.005    1.208    1.486    1.903    2.988 1.00   560
+theta[9]          2.318   0.838    1.169    1.701    2.164    2.744    4.401 1.01   290
+theta[10]         3.255   1.261    1.571    2.405    3.020    3.808    6.410 1.01   310
+deviance       3249.258  44.974 3162.605 3218.544 3249.988 3277.769 3338.855 1.01   240
+
+For each parameter, n.eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+
+DIC info (using the rule, pD = var(deviance)/2)
+pD =  999.6 and DIC = 4248.8
+DIC is an estimate of expected predictive error (lower deviance is better).</code></pre>
+</div>
+<div id="posterior-distribution-summary" class="section level3">
+<h3>Posterior Distribution Summary</h3>
+<pre class="r"><code>jags.mcmc &lt;- as.mcmc(model.fit)
+a &lt;- colnames(as.data.frame(jags.mcmc[[1]]))
+fit.mcmc &lt;- data.frame(as.matrix(jags.mcmc, chains = T, iters = T))
+colnames(fit.mcmc) &lt;- c(&quot;chain&quot;, &quot;iter&quot;, a)
+fit.mcmc.ggs &lt;- ggmcmc::ggs(jags.mcmc) # for GRB plot</code></pre>
+<div id="factor-loadings-lambda" class="section level4">
+<h4>Factor Loadings (<span class="math inline">\(\lambda\)</span>)</h4>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;lambda&quot;, prob = 0.8)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-lambda-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;lambda&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-lambda-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;lambda&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-lambda-2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;lambda&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-lambda-2-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;lambda.std&quot;, prob = 0.8)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-lambda-std-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;lambda.std&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-lambda-std-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;lambda.std&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-lambda-std-2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;lambda.std&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-lambda-std-2-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="factor-reliability-omega-omega" class="section level4">
+<h4>Factor Reliability Omega (<span
+class="math inline">\(\omega\)</span>)</h4>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;reli.omega&quot;, prob = 0.8)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-omega-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;reli.omega&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-omega-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;reli.omega&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-omega-2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;reli.omega&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-omega-2-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="factor-reliability-maximal-h" class="section level4">
+<h4>Factor Reliability Maximal (<span
+class="math inline">\(h\)</span>)</h4>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;reli.maximal&quot;, prob = 0.8)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-maximal-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;reli.maximal&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-maximal-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;reli.maximal&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-maximal-2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;reli.maximal&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-maximal-2-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="factor-loading-precision-hyper-prior" class="section level4">
+<h4>Factor Loading Precision Hyper-Prior</h4>
+<pre class="r"><code>bayesplot::mcmc_areas(fit.mcmc, regex_pars = &quot;lambdatau&quot;, prob = 0.8)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-hyperprior-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_acf(fit.mcmc, regex_pars = &quot;lambdatau&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-hyperprior-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>bayesplot::mcmc_trace(fit.mcmc, regex_pars = &quot;lambdatau&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-hyperprior-2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggmcmc::ggs_grb(fit.mcmc.ggs, family = &quot;lambdatau&quot;)</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-hyperprior-2-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(fit.mcmc, aes(x=lambdatau, y=reli.omega))+
+  geom_density_2d(adjust=2, color=&quot;black&quot;)+
+  geom_hline(yintercept = 0.7, color=&quot;gray50&quot;)+
+  lims(x=c(0.01, 10),y=c(0,1))+
+  theme_classic()</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-hyperprior-2-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(fit.mcmc, aes(x=invlambdatau, y=reli.omega))+
+  geom_density_2d(adjust=2, color=&quot;black&quot;)+
+  geom_hline(yintercept = 0.7, color=&quot;gray50&quot;)+
+  lims(x=c(0.01, 5),y=c(0,1))+
+  theme_classic()</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-hyperprior-2-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(fit.mcmc, aes(x=reli.omega))+
+  geom_density(adjust=2)+
+  lims(x=c(0,1))+
+  theme_classic()</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-hyperprior-2-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(fit.mcmc, aes(x=lambdatau, y=reli.maximal))+
+  geom_density_2d(adjust=2, color=&quot;black&quot;)+
+  geom_hline(yintercept = 0.7, color=&quot;gray50&quot;)+
+  lims(x=c(0.01, 10),y=c(0,1))+
+  theme_classic()</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-hyperprior-2-8.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(fit.mcmc, aes(x=invlambdatau, y=reli.maximal))+
+  geom_density_2d(adjust=2, color=&quot;black&quot;)+
+  geom_hline(yintercept = 0.7, color=&quot;gray50&quot;)+
+  lims(x=c(0.01, 5),y=c(0,1))+
+  theme_classic()</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/post-summary-hyperprior-2-9.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># PRIOR INFORMATION
+nsim &lt;- 10000
+prior_omega &lt;- function(lambda, theta){
+  (sum(lambda)**2)/(sum(lambda)**2 + sum(theta))
+}
+prior_lambda_tau &lt;- function(){
+  y &lt;- -1
+  while(y &lt;= 0){
+    #y &lt;- runif(1, 0.1,6)
+    y &lt;- rt(1, 4)
+  }
+  return(y)
+}
+prior_lambda_G &lt;- function(n, lambda_tau){
+  rnorm(n, 0, 1/lambda_tau)
+}
+sim_omega &lt;- numeric(nsim)
+sim_lambda_tau &lt;- numeric(nsim)
+for(i in 1:nsim){
+  sim_lambda_tau[i] &lt;- prior_lambda_tau()
+  lam_vec &lt;- prior_lambda_G(10,sim_lambda_tau[i])
+  tht_vec &lt;- rep(1, 10)
+  sim_omega[i] &lt;- prior_omega(lam_vec, tht_vec)
+}
+prior_data &lt;- data.frame(omega=sim_omega, lambda_tau=sim_lambda_tau) %&gt;%
+  mutate(lambda_tau_inv = 1/lambda_tau)
+
+# GENERATE THREE PLOTS TO COMBINE
+cols=c(&quot;Posterior&quot;=&quot;#0072b2&quot;, &quot;Prior&quot;=&quot;black&quot;) #&quot;#56B4E9&quot;, &quot;#E69F00&quot; &quot;#CC79A7&quot;, &quot;#d55e00&quot;, &quot;#f0e442, &quot;#0072b2&quot;
+lty =c(&quot;Prior&quot;=&quot;dashed&quot;, &quot;Post&quot;=&quot;solid&quot;)
+# PLOT 1 - JOINT DENSITY PLOT
+pB &lt;- ggplot()+
+  geom_point(
+    data=fit.mcmc, alpha=0.05,
+    aes(x=lambdatau, y=reli.omega, color=&quot;Posterior&quot;))+
+  geom_hline(yintercept = 0.7, color=&quot;grey30&quot;, linetype=&quot;dashed&quot;)+
+  geom_density_2d(
+    data=prior_data, linemitre = 2,
+    aes(x=lambda_tau, y=omega, color=&quot;Prior&quot;),
+    adjust=2)+
+  geom_density_2d(
+    data=fit.mcmc, 
+    aes(x=lambdatau, y=reli.omega, color=&quot;Posterior&quot;),
+    adjust=2)+
+  lims(x=c(0,10))+
+  scale_color_manual(values=cols,name=NULL)+
+  labs(y=&quot;Reliability (omega)&quot;,
+       x=&quot;Factor Loading Prior Precision&quot;)+
+  theme_classic()+
+  theme(
+    legend.position = c(0.75, 0.25),
+    legend.background = element_blank()
+  )
+pA &lt;-  ggplot()+
+  geom_density(
+    data=prior_data,  alpha=0.5,
+    aes(x=lambda_tau, color=&quot;Prior&quot;, fill=&quot;Prior&quot;),
+    adjust=1.5)+
+  geom_density(
+    data=fit.mcmc,  alpha=0.5, 
+    aes(x=lambdatau, color=&quot;Posterior&quot;, fill=&quot;Posterior&quot;),
+    adjust=4)+
+  lims(x=c(0,10))+
+  scale_color_manual(values=cols,name=NULL)+
+  scale_fill_manual(values=cols,name=NULL)+
+  labs(y=NULL, x=NULL)+
+  theme_classic()+
+  theme(
+    legend.position = &quot;none&quot;,
+    axis.text = element_blank(),
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+pC &lt;- ggplot()+
+  geom_density(
+    data=prior_data,  alpha=0.5,
+    aes(y=omega, color=&quot;Prior&quot;, fill=&quot;Prior&quot;),
+    adjust=4)+
+  geom_density(
+    data=fit.mcmc,  alpha=0.5,
+    aes(y=reli.omega, color=&quot;Posterior&quot;, fill=&quot;Posterior&quot;),
+    adjust=4)+
+  scale_color_manual(values=cols,name=NULL)+
+  scale_fill_manual(values=cols,name=NULL)+
+  labs(y=NULL, x=NULL)+
+  lims(y=c(0,1))+
+  theme_classic()+
+  theme(
+    legend.position = &quot;none&quot;,
+    axis.text = element_blank(),
+    axis.line.x = element_blank(),
+    axis.ticks.x = element_blank()
+  )
+
+laydes &lt;- &quot;
+AA#
+BBC
+BBC
+&quot;
+p &lt;- pA + pB + pC + 
+  plot_layout(design = laydes) +
+  plot_annotation(tag_levels = &quot;a&quot;)
+
+p</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite values (stat_density).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite values (stat_density2d).</code></pre>
+<p><img src="figure/sensitivity_analysis.Rmd/manuscript-figure-cauchy-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(filename = &quot;fig/posterior_sensitity_omega_cauchy.pdf&quot;, plot=p, width = 7, height=4.5,units=&quot;in&quot;)</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite values (stat_density).
+Removed 2 rows containing non-finite values (stat_density2d).</code></pre>
+<pre class="r"><code>ggsave(filename = &quot;fig/posterior_sensitity_omega_cauchy.png&quot;, plot=p, width = 7, height=4.5,units=&quot;in&quot;)</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite values (stat_density).
+Removed 2 rows containing non-finite values (stat_density2d).</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.2 (2022-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 22621)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] car_3.1-0            carData_3.0-5        mvtnorm_1.1-3       
+ [4] LaplacesDemon_16.1.6 runjags_2.2.1-7      lme4_1.1-30         
+ [7] Matrix_1.5-1         sirt_3.12-66         R2jags_0.7-1        
+[10] rjags_4-13           eRm_1.0-2            diffIRT_1.5         
+[13] statmod_1.4.36       xtable_1.8-4         kableExtra_1.3.4    
+[16] lavaan_0.6-13.1768   polycor_0.8-1        bayesplot_1.9.0     
+[19] ggmcmc_1.5.1.1       coda_0.19-4          data.table_1.14.2   
+[22] patchwork_1.1.1      forcats_0.5.1        stringr_1.4.0       
+[25] dplyr_1.0.9          purrr_0.3.4          readr_2.1.2         
+[28] tidyr_1.2.0          tibble_3.1.7         ggplot2_3.3.6       
+[31] tidyverse_1.3.2      workflowr_1.7.0     
+
+loaded via a namespace (and not attached):
+  [1] readxl_1.4.0         backports_1.4.1      systemfonts_1.0.4   
+  [4] plyr_1.8.7           splines_4.2.2        digest_0.6.29       
+  [7] htmltools_0.5.2      fansi_1.0.3          magrittr_2.0.3      
+ [10] checkmate_2.1.0      googlesheets4_1.0.0  tzdb_0.3.0          
+ [13] modelr_0.1.8         svglite_2.1.0        colorspace_2.0-3    
+ [16] rvest_1.0.2          textshaping_0.3.6    haven_2.5.0         
+ [19] xfun_0.31            callr_3.7.1          crayon_1.5.1        
+ [22] jsonlite_1.8.0       glue_1.6.2           gtable_0.3.0        
+ [25] gargle_1.2.0         webshot_0.5.3        distributional_0.3.0
+ [28] abind_1.4-5          scales_1.2.0         DBI_1.1.3           
+ [31] GGally_2.1.2         Rcpp_1.0.8.3         isoband_0.2.5       
+ [34] viridisLite_0.4.0    stats4_4.2.2         httr_1.4.3          
+ [37] RColorBrewer_1.1-3   posterior_1.2.2      ellipsis_0.3.2      
+ [40] pkgconfig_2.0.3      reshape_0.8.9        farver_2.1.1        
+ [43] sass_0.4.2           dbplyr_2.2.1         utf8_1.2.2          
+ [46] tidyselect_1.1.2     labeling_0.4.2       rlang_1.0.6         
+ [49] reshape2_1.4.4       later_1.3.0          munsell_0.5.0       
+ [52] cellranger_1.1.0     tools_4.2.2          cachem_1.0.6        
+ [55] cli_3.4.1            generics_0.1.3       broom_1.0.0         
+ [58] ggridges_0.5.3       evaluate_0.15        fastmap_1.1.0       
+ [61] ragg_1.2.4           yaml_2.3.5           processx_3.7.0      
+ [64] knitr_1.39           fs_1.5.2             admisc_0.29         
+ [67] nlme_3.1-160         whisker_0.4          xml2_1.3.3          
+ [70] compiler_4.2.2       rstudioapi_0.13      reprex_2.0.1        
+ [73] bslib_0.4.0          pbivnorm_0.6.0       stringi_1.7.6       
+ [76] highr_0.9            ps_1.7.0             lattice_0.20-45     
+ [79] TAM_4.0-16           psych_2.2.5          nloptr_2.0.3        
+ [82] tensorA_0.36.2       vctrs_0.4.1          CDM_8.1-12          
+ [85] pillar_1.8.0         lifecycle_1.0.1      jquerylib_0.1.4     
+ [88] httpuv_1.6.5         R2WinBUGS_2.1-21     R6_2.5.1            
+ [91] promises_1.2.0.1     boot_1.3-28          MASS_7.3-58.1       
+ [94] assertthat_0.2.1     rprojroot_2.0.3      withr_2.5.0         
+ [97] mnormt_2.1.1         parallel_4.2.2       hms_1.1.1           
+[100] grid_4.2.2           minqa_1.2.4          rmarkdown_2.14      
+[103] googledrive_2.0.0    git2r_0.30.1         getPass_0.2-2       
+[106] lubridate_1.8.0     </code></pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

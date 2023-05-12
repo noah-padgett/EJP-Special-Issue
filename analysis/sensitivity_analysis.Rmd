@@ -189,8 +189,8 @@ prior_omega <- function(lambda, theta){
 prior_lambda_tau <- function(){
   y <- -1
   while(y <= 0){
-    y <- runif(1, 0.1,6)
-    #y <- rt(1, 4)
+    #y <- runif(1, 0.1,6)
+    y <- rt(1, 4)
   }
   return(y)
 }
@@ -225,7 +225,7 @@ pB <- ggplot()+
     data=fit.mcmc, 
     aes(x=lambdatau, y=reli.omega, color="Posterior"),
     adjust=2)+
-  lims(x=c(0,6))+
+  lims(x=c(0,10))+
   scale_color_manual(values=cols,name=NULL)+
   labs(y="Reliability (omega)",
        x="Factor Loading Prior Precision")+
@@ -243,7 +243,7 @@ pA <-  ggplot()+
     data=fit.mcmc,  alpha=0.5, 
     aes(x=lambdatau, color="Posterior", fill="Posterior"),
     adjust=4)+
-  lims(x=c(0,6))+
+  lims(x=c(0,10))+
   scale_color_manual(values=cols,name=NULL)+
   scale_fill_manual(values=cols,name=NULL)+
   labs(y=NULL, x=NULL)+
@@ -286,8 +286,8 @@ p <- pA + pB + pC +
 
 p
 
-ggsave(filename = "fig/posterior_sensitity_omega_uniform.pdf", plot=p, width = 7, height=4.5,units="in")
+ggsave(filename = "fig/posterior_sensitity_omega_cauchy.pdf", plot=p, width = 7, height=4.5,units="in")
 
-ggsave(filename = "fig/posterior_sensitity_omega_uniform.png", plot=p, width = 7, height=4.5,units="in")
+ggsave(filename = "fig/posterior_sensitity_omega_cauchy.png", plot=p, width = 7, height=4.5,units="in")
 
 ```
